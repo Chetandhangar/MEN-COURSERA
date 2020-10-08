@@ -12,20 +12,34 @@ connect.then((db)=>{
         description:"test"
     })
     .then((dish)=>{
-        console.log(dish);
+        console.log(dish.toJSON());
 
-        return Dishes.find({}).exec();
+        return Dishes.findByIdAndUpdate(dish._id,{
+            $set:{description: "updated test"}
+        },{
+            new:true
+        }).
+        exec();
     })
-    .then((dishes)=>{
-        console.log("Found: \n");
-        console.log(dishes);
+    .then((dish)=>{
+        console.log(dish.toJSON());
 
-        return Dishes.remove({});
+        dish.comments.push({
+            rating : 5,
+            comment: 'I\'m getting  a sinking feeling!',
+            author: 'Cristiano Ronaldo'
+        });
+
+        return dish.save({});
+    })
+    .then((dish)=>{
+        console.log(dish.toJSON());
+        return Dishes.remove();
     })
     .then(()=>{
         return mongoose.connection.close();
     })
     .catch((err)=>{
         console.log(err);
-    })
+    });
 })
