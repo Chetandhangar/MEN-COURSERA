@@ -11,32 +11,11 @@ const commentSchema = new Schema({
         required: true
 
      },
-    
      author:{
          type: String,
          required: true
      },
-     images:{
-         type:String,
-         required:true
-     },
-     category:{
-         type:String,
-         required:true
-     },
-     label:{
-         type:String,
-         default:''
-     },
-     price:{
-         type: Currency,
-         required:true,
-         min:0
-     },
-     featured:{
-         type:Boolean,
-         default:false
-     },
+    
      comment:{
         type: String,
         required : true
@@ -54,11 +33,32 @@ const dishSchema = new Schema({
          unique: true
      },
      description:{
-         type: String,
-         required: true
+        type:String,
+        featured:true
      },
+     image:{
+        type:String,
+        required:true
+    },
+    category:{
+        type:String,
+        required:true
+    },
+    label:{
+        type:String,
+        default:''
+    },
+    price:{
+        type: Currency,
+        required:true,
+        min:0
+    },
+    featured:{
+        type:Boolean,
+        default:false
+    },
        comments : [commentSchema] 
-    },{
+    }, {
       timestamps:true
 });
 

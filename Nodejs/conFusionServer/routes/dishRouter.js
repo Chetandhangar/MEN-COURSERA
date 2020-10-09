@@ -12,10 +12,10 @@ dishRouter.use(bodyParser.json());
 dishRouter.route('/')
 .get( (req,res,next) => {
      Dishes.find({})
-     .then((dishes)=>{
+     .then((dish)=>{
        res.statusCode=200;
        res.setHeader('Content-Type','application/json');
-       res.json(dishes);
+       res.json(dish);
      },(err)=> next(err))
     .catch((err)=> next(err));   
   })
@@ -49,7 +49,7 @@ dishRouter.route('/')
     Dishes.findById(req.params.dishId)
      .then((dish)=>{
        res.statusCode=200;
-       res.setHeader('Content-Type',application/json);
+       res.setHeader('Content-Type','application/json');
        res.json(dish);
      },(err)=>next(err))
     .catch((err)=> next(err));
@@ -59,10 +59,12 @@ dishRouter.route('/')
     res.end('POST operation not supported on /dishes/'+req.params.dishId);
   })
   .put((req,res,next)=>{
-      Dishes.findByIdAndUpdate(req.params.dishId)
+      Dishes.findByIdAndUpdate(req.params.dishId, {
+        $set: req.body
+      }, {new : true})
       .then((dish)=>{
         res.statusCode=200;
-        res.setHeader('Content-Type',application/json);
+        res.setHeader('Content-Type','application/json');
         res.json(dish);
       },(err)=>next(err))
       .catch((err)=> next(err));
@@ -71,7 +73,7 @@ dishRouter.route('/')
     Dishes.findByIdAndRemove(req.params.dishId)
     .then((resp)=>{
        res.statusCode=200;
-      res.setHeader('Content-Type',application/json);
+      res.setHeader('Content-Type','application/json');
       res.json(resp);
     },(err)=>next(err))
     .catch((err)=>next(err));    
