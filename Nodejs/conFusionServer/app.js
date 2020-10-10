@@ -41,45 +41,26 @@ app.use(session({
   store:FileStore()
 }));
 
+app.use('/', indexRouter);
+app.use('/users', usersRouter);
+
 function auth(req,res,next){
   console.log(req.session);
 
-  if(!req.session.user) {
-
-    var authHeader = req.headers.authorization;   //stores req.header.atuhorization info in authheader
-    if(!authHeader){                                      //if autentication didint provide in req.header
-      var err = new Error('You are not authoniticated!');
-      res.setHeader('WWW-Authenticate','Basic');
-      err.status =401;
-      next(err);
-      return;
-    }
-    //if req.header contains authentication
-    var auth = new Buffer.from(authHeader.split(' ')[1],'base64').toString().split(':');
-    var user = auth[0];
-    var password = auth[1];
- 
-    if(user == 'admin' && password == 'password'){
-      //res.cookie('user','admin',{signed:true});
-      req.session.user = 'admin';
-      next(); //authorized
-    }
-    else{
-      var err = new Error("You are not authonticated!");
-      res.setHeader('WWW-Authenticate','Basic');
-      err.status=401;
-      next(err);
-    }
+  if(!req.session.user){
+    var err = new Error('You are not authenticate !');
+    err.status=401;
+    return next(err);
   }
   else{
-    if(req.session.user == 'admin'){
+    if(req.session.user == 'authenticated'){
       next();
     }
     else{
       var err = new Error("You are not authonticated!");
-      res.setHeader('WWW-Authenticate','Basic');
+      //res.setHeader('WWW-Authenticate','Basic');
       err.status=401;
-      next(err);
+      return next(err);
     }
   }
  
@@ -88,8 +69,6 @@ function auth(req,res,next){
 app.use(auth);
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/', indexRouter);
-app.use('/users', usersRouter);
 app.use('/dishes',dishRouter);
 app.use('/promotions',promoRouter);
 app.use('/leaders',leaderRouter);
